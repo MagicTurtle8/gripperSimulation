@@ -8,6 +8,7 @@ from random import randint
 l1 = 350  # starting length of link1
 l2 = 350  # starting length of link2
 beamLength = 500
+hatLength = 100
 
 # link 1 starting coordinates
 link1startX = 0
@@ -67,13 +68,20 @@ def next(event):
     # plot updated member 2
     link2EndX = position.defaultAngle(True, updatedLink2length, link1EndX, link1EndY)[0]
     link2EndY = position.defaultAngle(True, updatedLink2length, link1EndX, link1EndY)[1]
-    plt.plot([link1EndX, link2EndX], [link1EndY, link2EndY], 'o-')
+    plt.plot([link1EndX, link2EndX], [link1EndY, link2EndY], 'bo-')
 
     # plot updated member 2 - RH
     link2EndXrh = position.defaultAngle(False, updatedLink2lengthRH, link1EndXrh, link1EndYrh)[0]
     link2EndYrh = position.defaultAngle(False, updatedLink2lengthRH, link1EndXrh, link1EndYrh)[1]
-    plt.plot([link1EndXrh, link2EndXrh], [link1EndYrh, link2EndYrh], 'o-')
+    plt.plot([link1EndXrh, link2EndXrh], [link1EndYrh, link2EndYrh], 'bo-')
 
+    # plot hat
+    hatCoord = position.hatCoordinate(hatLength, link2EndX, link2EndY)
+    plt.plot([link2EndX, hatCoord[0]], [link2EndY, hatCoord[1]], 'r-')
+
+    # plot hat - RH
+    hatCoord = position.hatCoordinateRight(hatLength, link2EndXrh, link2EndYrh)
+    plt.plot([link2EndXrh, hatCoord[0]], [link2EndYrh, hatCoord[1]], 'r-')
 
     axnext = plt.axes([0.81, 0.05, 0.1, 0.075])
     bnext = Button(axnext, 'step2')
@@ -103,11 +111,16 @@ def next2(event):
     plt.plot([link1startXrh, link1EndXrh], [link1startYrh, link1EndYrh], 'r-')
 
     # plot member 2 in right angled
-    plt.plot([link1EndX, link1EndX], [link1EndY, link1EndY + updatedLink2length], 'o-')
+    plt.plot([link1EndX, link1EndX], [link1EndY, link1EndY + updatedLink2length], 'bo-')
 
     # plot member 2 in right angled - RH
-    plt.plot([link1EndXrh, link1EndXrh], [link1EndYrh, link1EndYrh + updatedLink2lengthRH], 'o-')
+    plt.plot([link1EndXrh, link1EndXrh], [link1EndYrh, link1EndYrh + updatedLink2lengthRH], 'bo-')
 
+    # plot hat
+    plt.plot([link1EndX, link1EndX + hatLength], [link1EndY + updatedLink2length , link1EndY + updatedLink2length], 'r-')
+
+    # plot hat - RH
+    plt.plot([link1EndXrh, link1EndXrh - hatLength], [link1EndYrh + updatedLink2lengthRH , link1EndYrh + updatedLink2lengthRH], 'r-')
 
     axnext = plt.axes([0.81, 0.05, 0.1, 0.075])
     bnext = Button(axnext, 'reset')
@@ -135,17 +148,25 @@ def main():
     link1EndYrh = getL1End(l1)[1]  # also link2startY
     link2EndXrh = position.defaultAngle(False, l2, link1EndXrh, link1EndYrh)[0]
     link2EndYrh = position.defaultAngle(False, l2, link1EndXrh, link1EndYrh)[1]
+
     plt.axis('equal')
+
     # plot link1
     plt.plot([link1startX, link1EndX], [link1startY, link1EndY], 'r-')
     # plot link2
-    plt.plot([link1EndX, link2EndX], [link1EndY, link2EndY], 'o-')
+    plt.plot([link1EndX, link2EndX], [link1EndY, link2EndY], 'bo-')
+    # plot hat
+    hatCoord = position.hatCoordinate(hatLength, link2EndX, link2EndY)
+    plt.plot([link2EndX, hatCoord[0]], [link2EndY, hatCoord[1]], 'r-')
+
 
     # plot link1 -RH
     plt.plot([link1startXrh, link1EndXrh], [link1startYrh, link1EndYrh], 'r-')
     # plot link2 -RH
-    plt.plot([link1EndXrh, link2EndXrh], [link1EndYrh, link2EndYrh], 'o-')
-
+    plt.plot([link1EndXrh, link2EndXrh], [link1EndYrh, link2EndYrh], 'bo-')
+    # plot hat - RH
+    hatCoord = position.hatCoordinateRight(hatLength, link2EndXrh, link2EndYrh)
+    plt.plot([link2EndXrh, hatCoord[0]], [link2EndYrh, hatCoord[1]], 'r-')
 
     global beamOriginX
     global beamOriginY
@@ -153,16 +174,13 @@ def main():
     beamOriginY = randint(int(link1EndY)+ 800, int(link1EndY) + 1000)
 
     # plot beam horizontal member
-    print('BEAM ORIGIN: (' + str(beamOriginX) + ',' + str(beamOriginY) + ')')
     plt.plot([beamOriginX, beamOriginX + beamLength], [beamOriginY, beamOriginY], 'g-')
-
     # plot beam vertical member
     plt.plot([beamOriginX, beamOriginX], [beamOriginY, beamOriginY + beamLength], 'g-')
 
     # beam top left corner coordinates
     goalX = beamOriginX
     goalY = beamOriginY + beamLength
-
     # beam bottom right corner coordinates
     goalXbottom = beamOriginX + beamLength
     goalYbottom = beamOriginY
