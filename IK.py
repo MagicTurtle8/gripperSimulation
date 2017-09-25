@@ -3,9 +3,17 @@ import math
 # returns the length of link 2 through the given coordinates
 def solveL22(x, y):
     a = 1
-    b = -2 * x
+    b = +2 * x
     c = x**2 - y **2
-    return (-b + (b**2 - (4 * a * c))**0.5)/(2 * a)
+    return (-b - (b**2 - (4 * a * c))**0.5)/(2 * a)
+
+# returns the length of link 2 through the given coordinates
+def solveL222(x, y):
+    a = 1
+    b = - 2 * x
+    c = 2 *x**2 - y **2
+    return (-b - (b**2 - (4 * a * c))**0.5)/(2 * a)
+
 
 # returns the length of link 1 through x-coordinate
 def solveL11(x):
